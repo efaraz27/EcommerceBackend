@@ -17,6 +17,9 @@ FROM build AS publish
 RUN dotnet publish "UserService.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
+WORKDIR /migration
+COPY --from=migration /app/migration .
+
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "UserService.dll"]
